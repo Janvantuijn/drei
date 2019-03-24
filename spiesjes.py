@@ -4,9 +4,9 @@
 # In[1]:
 
 
+# load libraries
 import numpy as np
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
 import datetime
 from scipy.stats import linregress
 
@@ -14,6 +14,7 @@ from scipy.stats import linregress
 # In[2]:
 
 
+# load data
 data = np.genfromtxt('data.txt', dtype ='str')
 
 
@@ -36,15 +37,17 @@ years = data[:,3].astype(int)
 
 dts = []
 
+# load string data to datetime objects
 for i in range(len(change)):
     date = datetime.datetime.strptime(str(dates[i])+' '+str(months[i])+' '+str(years[i]), '%d %B %Y')
     dts.append(date)
 
+# make cumulative data
 cum = np.zeros(len(change))
 for i in range(len(change)):
     cum[i] = cum[i-1]+change[i]
 
-
+# change direction: from old to new
 dts = dts[::-1]
 plt.plot(dts,cum)
 
@@ -52,30 +55,33 @@ base = dts[0]
 
 dts2 = [(dts[i]-base).days for i in range(len(dts))]
 
-slope, intercept, r_value, p_value, std_err = linregress(dts2, cum)
+dts2 = np.transpose(dts2)[:, np.newaxis]
+a, _, _, _ = np.linalg.lstsq(dts2, cum)
 
 
-# In[7]:
+# In[6]:
 
 
-n = 3000
+# number of prediction x-values
+n = 1200
 xarray = np.linspace(0,n,n)
 
 target = 333
 
+# note: this method is really stupid because it calculates 1200 points whereas it could have done with 2. But whatever.
 datesarr = np.array([base+datetime.timedelta(days=i) for i in range(n)])
-yvals = slope*xarray+intercept
 
-final = (target-intercept)/slope
+# Calculate intersection with 333 spiesjes
+final = (target)/a[0]
 finaltime = datetime.timedelta(final)
 finaldate = base+finaltime
-print(finaldate)
 
+# Plot
 plt.figure(figsize=(12,7))
 plt.axvline(x=finaldate, color='r')
 plt.axhline(y=target)
 plt.plot(dts,cum)
-plt.plot(datesarr, yvals)
+plt.plot(datesarr, a*xarray)
 plt.xlabel('Jaar')
 plt.ylabel('Spiesjes')
 plt.title('Hoe snel halen die mooie jongens de 333 spiesjes? Op {}'.format(finaldate))
