@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\setlength{\topmargin}{0.1cm}
+
+\begin{document}
+\centering	
+\Large\textbf{{Jopie van Dopie:}}\\
+\Huge\textbf{{afmeldingen-bingo}}\\
+\vspace{0.5cm}
+\large\textit{{Bingo-kaart van: NAME}}
+
+\vspace{1.0cm}
+
+\begin{tikzpicture}[node distance = 0pt, every node/.style = {draw, minimum size=40mm, inner sep=0pt, outer sep=0pt}]
+	\node (n1)  [align=center, text width=3cm]			{\small{EXCUSE0}};
+	%
+	\node (n11) [align=center, text width=3cm, below left=of n1.south]    {\small{EXCUSE1}};
+	\node (n12) [align=center, text width=3cm, right=of n11]              {\small{EXCUSE2}};
+	%
+	\node (n21) [align=center, text width=3cm, below left=of n11.south]   {\small{EXCUSE3}};
+	\node (n22) [align=center, text width=3cm, right=of n21]              {\small{EXCUSE4}};
+	\node (n23) [align=center, text width=3cm, right=of n22]              {\small{EXCUSE5}};
+\end{tikzpicture}
+\end{document}
