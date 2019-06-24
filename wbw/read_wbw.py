@@ -49,4 +49,36 @@ plt.xlabel("Datum")
 plt.ylabel("Cumulatief gespendeerd")
 plt.title("Wanneer hebben die mooie jongens al dat geld gespendeerd?")
 plt.legend()
-plt.savefig("cumulative_spending.png", dpi = 300)
+#plt.savefig("cumulative_spending.png", dpi = 300)
+
+
+#%%
+
+# to what did we spent everything
+spendings = ['bier', 'pils', 'kan', 'munt', 'krat']
+
+# for plotting
+spend_names = ['bier', 'pils', 'kannen', 'munten', 'kratten']
+
+spent_goal = dict.fromkeys(spendings+['overig'])
+
+print(spent_goal)
+
+print(data.columns)
+
+#%%
+
+for i in range(len(data['Amount'])):
+    
+    # Overig?
+    to_goal = False
+    
+    for name_goal in spendings:
+        if name_goal in data['Description'][i]:
+            spent_goal[name_goal] += data['Amount'][i]
+            to_goal = True
+            
+    if not to_goal:
+        spent_goal['overig'] += data['Amount'][i]
+        
+print(spent_goal)
