@@ -2,12 +2,22 @@
 """
 Created on Sun Jun 23 15:00:40 2019
 
+# to do: 
+- winnaar per maand
+- relateren aan weer
+- overall winnaar
+- grootste uitgaven
+- persoon meest gepaald op bepaalde woorden
+
 @author: Sjoerd Gn
 """
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+
+#%%
 
 data = pd.read_csv("data.txt", sep = '\t')
 data['Amount']=data['Amount'].replace('\u20AC','',regex=True).astype(float)
@@ -55,19 +65,15 @@ plt.legend()
 #%%
 
 # to what did we spent everything
-spendings = ['bier', 'pils', 'kan', 'munt', 'krat']
+spendings = ['bier', 'pils', 'kan', 'krat', 'munt', 'bonnen', 'langs de lijn', 'dixo', 'lunch', 'pizza', 'afmelden']
 
 # for plotting
-spend_names = ['bier', 'pils', 'kannen', 'munten', 'kratten']
+spend_names = ['bier', 'pils', 'kannen', 'kratten', 'munten',  'bonnen', 'langs de lijn', 'Dopie dixo', 'lunch', 'pizza', 'te laat afmelden',  'overig']
 
-spent_goal = dict.fromkeys(spendings+['overig'])
+spent_goal = dict.fromkeys(spendings+['overig'], 0)
 
-print(spent_goal)
 
-print(data.columns)
-
-#%%
-
+fig = plt.figure(figsize = (12,12))
 for i in range(len(data['Amount'])):
     
     # Overig?
@@ -80,5 +86,23 @@ for i in range(len(data['Amount'])):
             
     if not to_goal:
         spent_goal['overig'] += data['Amount'][i]
-        
-print(spent_goal)
+
+ax = fig.add_subplot(1, 1, 1)    
+plt.bar(range(len(spent_goal)), spent_goal.values())
+
+
+major_ticks = np.arange(0, 6000, 1000)
+minor_ticks = np.arange(0, 6000, 200)
+
+ax.set_yticks(major_ticks)
+ax.set_yticks(minor_ticks, minor=True)
+
+plt.grid(which = 'major', axis = 'y', linestyle = '-')
+plt.grid(which = 'minor', axis = 'y', linestyle = ':')
+
+plt.xticks(range(len(spent_goal)), spend_names, rotation = 33)
+plt.xlabel("Waar hebben die mooie jongens dat aan uitgegeven?")
+plt.ylabel("Keiharde euro's")
+plt.title('Waar is dat geld dan precies heen gegaan?')
+
+plt.savefig('direction_spending.png', dpi = 200)
