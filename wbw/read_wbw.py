@@ -16,6 +16,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
+from pandas.plotting import table 
+#%%
 
 #%%
 
@@ -45,7 +47,7 @@ for i in range(len(data)):
        
         result[name] = result[name].append({'date': date, 
               'cost': cost, 'sum_cost': cost}, ignore_index = True)
-    
+#%%    
 plt.figure(figsize = (12,12))
 for name in members:
     result[name]['date'] = pd.to_datetime(result[name]['date'], format='%d-%m-%Y')
@@ -106,3 +108,15 @@ plt.ylabel("Keiharde euro's")
 plt.title('Waar is dat geld dan precies heen gegaan?')
 
 plt.savefig('direction_spending.png', dpi = 200)
+
+#%%
+print(data.iloc[29])
+
+exp_data = data.sort_values(by=['Amount'], ascending = False)
+exp_data = exp_data.reset_index()
+plot_exp_data = exp_data[[ 'Amount', 'Who', 'Description', 'Participants']].iloc[0:33]
+
+plot_exp_data.to_csv('highest_expenses.csv')
+
+#%%
+
